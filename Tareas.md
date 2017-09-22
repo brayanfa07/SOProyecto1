@@ -1,7 +1,7 @@
 #Tareas
 
 
-Tareas ara el desarrollo del proyecto
+Tareas para el desarrollo del proyecto
 
 
 
