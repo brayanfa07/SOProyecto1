@@ -1,6 +1,7 @@
-<h1 Tareas </h1>
+<h1>Tareas</h1>
 
 
+<p>
 Tareas para el desarrollo del proyecto
 1) Manejo de expresiones regulares.
 2) Manejo de directorios
@@ -8,7 +9,7 @@ Tareas para el desarrollo del proyecto
 - Implementacion para dividir los hilos por cada archivo que se analiza
 4) Implementar -l
 5) Implementar -r
-
+</p>
 
 
 
