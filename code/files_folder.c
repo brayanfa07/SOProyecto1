@@ -1,18 +1,21 @@
-//File that includes yhe methods related with the manioulation of directories and files
+//File that includes yhe methods related with the manipulation of directories and files
 
 
-#include "dirent.h"
+#include <sys/types.h>
+#include <dirent.h>
 #include "stdio.h"
 
 
 //Open a directory
-int openDirectory (){
+DIR* openDirectory (){
+	printf("Printing a run test\n");
 
-	if (opendir("/home/brayan/SOProyecto1")){
+	if (opendir("/home/brayan/SOProyecto1/")){
 
-		DIR* direction = opendir("/home/brayan/SOProyecto1");
-		printf("%s\n", (char*) direction);
-		return 0;
+		DIR* direction = opendir("/home/brayan/SOProyecto1/");
+		printf("Printing a second run test\n");
+
+		return direction;
 	}
 	else{
 		printf("ERROR: Could not open directory");
@@ -20,12 +23,11 @@ int openDirectory (){
 }
 
 
-
+//Main function
 int main(int argc, char const *argv[])
 {
+	printf("It is possible run openDirectory\n");
 	openDirectory();
-
-
 
 	return 0;
 }
