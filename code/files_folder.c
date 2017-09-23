@@ -4,10 +4,47 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include "stdio.h"
+#include <string.h>
 
+/*Read a directory
+Input: DIR pointer, returned from openDirectory
+Output: A printing 
+*/
+char* readADirectory(DIR* directory){
+
+	struct dirent *dp = readdir(directory);
+
+	printf("%c\n", dp->d_type);
+
+	if (dp != NULL) {
+
+		printf("%d\n", dp->d_type);
+        /*if (strcmp((char*)dp->d_type,"DT_DIR")) {
+            closedir(directory);
+            printf("Found as a directory\n");
+            return "FOUND";
+        }*/
+        /*else{
+	       if (strcmp((char*)dp->d_type,"DT_REG")) {
+	            closedir(directory);
+	            printf("Found as a file\n");
+
+	            return "FOUND";
+	        }
+		}
+
+*/
+		return "FOUND";
+	}
+	else{
+	    printf("File or directory not found\n");
+
+	    return "NOTFOUND";
+	}
+}
 
 //Open a directory
-DIR* openDirectory (char directory){
+DIR* openDirectory (char* directory){
 	printf("Printing a run test\n");
 
 	if (opendir(directory)){
@@ -15,6 +52,7 @@ DIR* openDirectory (char directory){
 		DIR* direction = opendir(directory);
 		printf("Printing a second run test\n");
 
+		readADirectory(direction);
 		return direction;
 	}
 	else{
@@ -22,12 +60,7 @@ DIR* openDirectory (char directory){
 	}
 }
 
-//char* readADirectory(DIR* directory){
 
-
-
-
-//}
 
 
 
