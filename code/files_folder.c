@@ -7,12 +7,12 @@
 
 
 //Open a directory
-DIR* openDirectory (){
+DIR* openDirectory (char directory){
 	printf("Printing a run test\n");
 
-	if (opendir("/home/brayan/SOProyecto1/")){
+	if (opendir(directory)){
 
-		DIR* direction = opendir("/home/brayan/SOProyecto1/");
+		DIR* direction = opendir(directory);
 		printf("Printing a second run test\n");
 
 		return direction;
@@ -22,12 +22,21 @@ DIR* openDirectory (){
 	}
 }
 
+//char* readADirectory(DIR* directory){
+
+
+
+
+//}
+
+
+
 
 //Main function
 int main(int argc, char const *argv[])
 {
 	printf("It is possible run openDirectory\n");
-	openDirectory();
+	openDirectory("/home/brayan/SOProyecto1/");
 
 	return 0;
 }
