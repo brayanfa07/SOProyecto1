@@ -14,26 +14,14 @@ char* readADirectory(DIR* directory){
 
 	struct dirent *dp = readdir(directory);
 
-	printf("%c\n", dp->d_type);
+	if (dp->d_type != 0) {
 
-	if (dp != NULL) {
-
-		printf("%d\n", dp->d_type);
-        /*if (strcmp((char*)dp->d_type,"DT_DIR")) {
-            closedir(directory);
-            printf("Found as a directory\n");
-            return "FOUND";
-        }*/
-        /*else{
-	       if (strcmp((char*)dp->d_type,"DT_REG")) {
-	            closedir(directory);
-	            printf("Found as a file\n");
-
-	            return "FOUND";
-	        }
+		if(dp->d_type == DT_REG){
+			printf("The directory stream sent is a directory\n");
 		}
-
-*/
+		else{
+			printf("The directory stream sent is a file\n");
+		}
 		return "FOUND";
 	}
 	else{
@@ -45,31 +33,25 @@ char* readADirectory(DIR* directory){
 
 //Open a directory
 DIR* openDirectory (char* directory){
-	printf("Printing a run test\n");
 
 	if (opendir(directory)){
 
 		DIR* direction = opendir(directory);
-		printf("Printing a second run test\n");
 
 		readADirectory(direction);
 		return direction;
 	}
 	else{
-		printf("ERROR: Could not open directory");
+		printf("ERROR: Could not open directory\n");
 	}
 }
-
-
-
-
 
 
 //Main function
 int main(int argc, char const *argv[])
 {
 	printf("It is possible run openDirectory\n");
-	openDirectory("/home/brayan/SOProyecto1/");
+	openDirectory("/home/brayan/SOProyecto1");
 
 	return 0;
 }
