@@ -5,6 +5,8 @@
 #include <dirent.h>
 #include "stdio.h"
 #include <string.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 /*Read a directory
 Input: DIR pointer, returned from openDirectory
@@ -47,6 +49,13 @@ DIR* openDirectory (char* directory){
 	}
 	else{
 		printf("ERROR: Could not open directory. It could be trying to open a file :/ \n");
+
+		int fd;
+		fd = open(directory, O_WRONLY);
+
+		DIR * direction = fdopendir (fd);
+		readADirectory(direction);
+		return direction;
 	}
 }
 
@@ -55,7 +64,7 @@ DIR* openDirectory (char* directory){
 int main(int argc, char const *argv[])
 {
 	printf("It is possible run openDirectory\n");
-	openDirectory("/home/brayan/SOProyecto1/code/");
+	openDirectory("/home/brayan/SOProyecto1/code/files_folder.c");
 
 	return 0;
 }
