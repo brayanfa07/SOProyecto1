@@ -16,7 +16,7 @@ char* readADirectory(DIR* directory){
 
 	if (dp->d_type != 0) {
 
-		if(dp->d_type == DT_REG){
+		if(dp->d_type == DT_DIR){
 			printf("The directory stream sent is a directory\n");
 		}
 		else{
@@ -31,7 +31,11 @@ char* readADirectory(DIR* directory){
 	}
 }
 
-//Open a directory
+/*Open a directory method
+ENTRY:  A directory
+Output: a DIR* Pointer
+*/
+
 DIR* openDirectory (char* directory){
 
 	if (opendir(directory)){
@@ -42,7 +46,7 @@ DIR* openDirectory (char* directory){
 		return direction;
 	}
 	else{
-		printf("ERROR: Could not open directory\n");
+		printf("ERROR: Could not open directory. It could be trying to open a file :/ \n");
 	}
 }
 
@@ -51,7 +55,7 @@ DIR* openDirectory (char* directory){
 int main(int argc, char const *argv[])
 {
 	printf("It is possible run openDirectory\n");
-	openDirectory("/home/brayan/SOProyecto1");
+	openDirectory("/home/brayan/SOProyecto1/code/");
 
 	return 0;
 }
