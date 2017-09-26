@@ -8,55 +8,35 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+
 /*Read a directory
 Input: DIR pointer, returned from openDirectory
 Output: A printing 
 */
-char* readADirectory(DIR* directory){
 
-	struct dirent *dp = readdir(directory);
-
-	if (dp->d_type != 0) {
-
-		if(dp->d_type == DT_DIR){
-			printf("The directory stream sent is a directory\n");
-		}
-		else{
-			printf("The directory stream sent is a file\n");
-		}
-		return "FOUND";
-	}
-	else{
-	    printf("File or directory not found\n");
-
-	    return "NOTFOUND";
-	}
-}
 
 /*Open a directory method
 ENTRY:  A directory
 Output: a DIR* Pointer
 */
+struct dirent* openDirectory (char* directory){
 
-DIR* openDirectory (char* directory){
+	DIR* direction;
+	struct dirent *dp;
 
-	if (opendir(directory)){
+	if ((direction= opendir(directory)) != NULL){
 
-		DIR* direction = opendir(directory);
+		while ((dp = readdir(direction)) != NULL){
 
-		readADirectory(direction);
-		return direction;
+			printf ("%s\n", dp->d_name);	
+		}
+		closedir(direction);
+		return dp;
 	}
 	else{
-		printf("ERROR: Could not open directory. It could be trying to open a file :/ \n");
-
-		int fd;
-		fd = open(directory, O_WRONLY);
-
-		DIR * direction = fdopendir (fd);
-		readADirectory(direction);
-		return direction;
+		printf("Its not possible open the directory\n");
 	}
+		return dp;
 }
 
 
@@ -64,7 +44,7 @@ DIR* openDirectory (char* directory){
 int main(int argc, char const *argv[])
 {
 	printf("It is possible run openDirectory\n");
-	openDirectory("/home/brayan/SOProyecto1/code/files_folder.c");
+	openDirectory("/home/brayan/SOProyecto1/code");
 
 	return 0;
 }
