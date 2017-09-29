@@ -1,4 +1,3 @@
-
 /*
  * Laboratorio 6.
  * Gabriel Ramírez Ramírez.
@@ -12,7 +11,10 @@
 */
 
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
+#include <fcntl.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -61,6 +63,33 @@ int tieneSubdirectorio(const char *pRuta)
     }
 }
 
+void escribirArchivo(char *file)
+{
+    int fd;                 
+    struct flock lock;      //Bloqueador del archivo
+
+    fd = open(file, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
+    char linea[40] = "ESCRIBIENDO EN TODOS....";
+  
+    /* Inicializar la estructura del flock*/
+    memset(&lock, 0, sizeof(lock));
+    lock.l_type = F_WRLCK;
+    
+    /* Colocar la cerradura de escritura al archivo*/
+    fcntl (fd, F_SETLKW, &lock);
+    
+    // Se escribe
+    size_t length = strlen(linea);
+    /* Escribir en el archivo */
+    write(fd, linea, length);
+    //fprintf(fd, "%c\n",'.');
+    
+    /*Soltar la cerradura*/
+    lock.l_type = F_UNLCK;
+    fcntl (fd, F_SETLKW, &lock);
+    
+    close(fd);
+}
 
 
 
@@ -82,7 +111,8 @@ int desplegarDirectorio(const char *pNombreDir)
             stat(pNombreDir, &st);
             int size = st.st_size;
             char* date;
-            date = ctime(&st.st_mtime); // El Fyle System de Linux no almacena la fecha de creación.  
+            date = ctime(&st.st_mtime); // El Fyle System de Linux no almacena la fecha de creación.
+            escribirArchivo(pNombreDir);  
             printf(" NOMBRE DE ARCHIVO: %s -- TAMAÑO: %i bytes -- FECHA MODIFICACION: %s \n", pNombreDir, size, date);
         }
                         
@@ -118,6 +148,6 @@ int desplegarDirectorio(const char *pNombreDir)
 
 int main(int argc, char *argv[])
 {
-	ruta = argv[1]; 
+    ruta = argv[1]; 
     desplegarDirectorio(ruta);    
 }
