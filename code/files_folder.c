@@ -16,34 +16,43 @@ struct dirent* openDirectory (char* directory){
 
 	DIR* direction;
 	struct dirent *dp;
-	char nuevaRuta[100];
+	char newDirectory[100];
 
 	if ((direction= opendir(directory)) != NULL){
 
 		while ((dp = readdir(direction)) != NULL){
 
-			if (dp->d_type == DT_DIR){
+			//Compare if the dp--> d_type is a file
+			if (dp->d_type == DT_REG){
+				printf ("File found --> %s\n", dp->d_name);
+			}
 
-				printf("Directory found 1 --> %s\n", directory);
+			else {
+				//Compare if the dp--> d_type is a directory or folder
 
-				if (!((strcmp(dp->d_name, ".")) || !(strcmp(dp->d_name,"..")) || !(strcmp(dp->d_name,"/.")))) {
+				printf("\n");
+				if (dp->d_type == DT_DIR){
 
-					printf("With . or .. --> %s\n", dp->d_name);			
-	                strcpy(nuevaRuta, directory);
-	                strcat(nuevaRuta, "/");
-	                strcat(nuevaRuta, dp->d_name);
+					//Compare if the directory is . or ..
+					if ( (strcmp(dp->d_name, ".") == 0) || (strcmp(dp->d_name, "..") == 0) || (strcmp(dp->d_name,".git")) == 0) {
+						printf("+++++++++++ Directory found with . or .. or .git %s\n\n", dp->d_name);
+		            }
 
-	                printf("New Route found --> %s\n", nuevaRuta);
-	            }
+		            //Compare if the directory is not a . or ..
+                    else{
+		            	printf("Directory found --> %s\n", dp->d_name);			
+		                strcpy(newDirectory, directory);
+		                strcat(newDirectory, "/");
+		                strcat(newDirectory, dp->d_name);
 
-                //openDirectory(nuevaRuta);
-            }
-            else{
-            	if (dp->d_type == DT_REG){
-					printf ("File found --> %s\n", dp->d_name);
+		                printf("New Route for new directory defined --> %s\n", newDirectory);
+
+		                openDirectory(newDirectory);
+					}
 				}
 			}
 		}
+		
 		closedir(direction);
 		return dp;
 	}
@@ -58,7 +67,7 @@ struct dirent* openDirectory (char* directory){
 int main(int argc, char const *argv[])
 {
 	printf("It is possible run openDirectory method\n\n");
-	openDirectory("/home/brayan/SOProyecto1/code");
+	openDirectory("/home/brayan/SOProyecto1");
 
 	return 0;
 }
