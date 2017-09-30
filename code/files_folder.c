@@ -34,8 +34,8 @@ struct dirent* openDirectory (char* directory){
 				if (dp->d_type == DT_DIR){
 
 					//Compare if the directory is . or ..
-					if ( (strcmp(dp->d_name, ".") == 0) || (strcmp(dp->d_name, "..") == 0) || (strcmp(dp->d_name,".git")) == 0) {
-						printf("+++++++++++ Directory found with . or .. or .git %s\n\n", dp->d_name);
+					if ( (strcmp(dp->d_name, ".") == 0) || (strcmp(dp->d_name, "..") == 0)) {
+						printf("+++++++++++ Directory found with . or ..  %s\n\n", dp->d_name);
 		            }
 
 		            //Compare if the directory is not a . or ..
@@ -67,7 +67,7 @@ struct dirent* openDirectory (char* directory){
 int main(int argc, char const *argv[])
 {
 	printf("It is possible run openDirectory method\n\n");
-	openDirectory("/home/brayan/SOProyecto1");
+	openDirectory("/home/brayan/SOProyecto1/code");
 
 	return 0;
 }
