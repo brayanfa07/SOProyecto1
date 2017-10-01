@@ -9,3 +9,5 @@ https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-
 https://www.gnu.org/software/libc/manual/html_node/Directory-Entries.html
 
 https://stackoverflow.com/questions/13785895/printing-two-strings-at-same-line-from-using-fgets
+
+https://en.wikibooks.org/wiki/C_Programming/stdio.h/scanf#Usage
