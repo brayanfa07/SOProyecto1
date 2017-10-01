@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 
 
+
 /*Open a directory method
 ENTRY:  A directory
 Output: a DIR* Pointer
@@ -28,9 +29,10 @@ struct dirent* openDirectory (char* directory){
 			}
 
 			else {
-				//Compare if the dp--> d_type is a directory or folder
 
 				printf("\n");
+
+				//Compare if the dp--> d_type is a directory or folder
 				if (dp->d_type == DT_DIR){
 
 					//Compare if the directory is . or ..
@@ -45,8 +47,9 @@ struct dirent* openDirectory (char* directory){
 		                strcat(newDirectory, "/");
 		                strcat(newDirectory, dp->d_name);
 
-		                printf("New Route for new directory defined --> %s\n", newDirectory);
+		                printf("New Route for new directory defined --> %s\n\n", newDirectory);
 
+		                printf("====================  Introducing in other folder ... \n");
 		                openDirectory(newDirectory);
 					}
 				}
@@ -62,10 +65,26 @@ struct dirent* openDirectory (char* directory){
 		return dp;
 }
 
-
 //Main function
 int main(int argc, char const *argv[])
 {
+
+	printf("GREP method\n\n ========= Introduce variables like this:\n\ngrep [optiosn (-l or -r)] [regular expression] [file|folder] \n\n");
+	
+	printf("grep ");
+	char typeMethod;
+	char regularExpression;
+	char directory;
+
+	scanf(" %c %c %c", &typeMethod, &regularExpression, &directory);
+
+	if (strcmp(typeMethod, "-l"){
+
+		printf("Sea%s\n", );
+
+	}
+
+
 	printf("It is possible run openDirectory method\n\n");
 	openDirectory("/home/brayan/SOProyecto1/code");
 
