@@ -7,7 +7,8 @@
 
 #include <pthread.h>   
 
-#include <stdlib.h>      
+#include <stdlib.h>
+#include <regex.h>      
 
 
 //========================= DEFINICIONES ==================================
