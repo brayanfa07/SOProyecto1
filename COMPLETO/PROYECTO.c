@@ -188,6 +188,7 @@ struct dirent* openDirectoryForR(char* directory, char* expresion){
   //struct arg_structure args;
 
   if ((direction= opendir(directory)) != NULL){
+    match = 0; 
 
     while ((dp = readdir(direction)) != NULL){
 
