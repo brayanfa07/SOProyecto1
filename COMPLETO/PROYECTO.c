@@ -291,14 +291,14 @@ int main(int argc, char const *argv[])
 		if (strcmp(typeMethod, "-l") == 0){
 
 			printf("-l: Method that search in a file until find a match with the regular expression \n\n" );
-			openDirectoryForL(directory);
+			openDirectoryForL(directory, regularExpression);
 
 		}
 		else{
 			if (strcmp(typeMethod, "-r") == 0){
 
 			printf("-r: Method that search in all the files and directories printing all the matches of the regular expression \n\n" );
-			openDirectoryForR(directory);
+			openDirectoryForR(directory, regularExpression);
 
 			}
 		}
