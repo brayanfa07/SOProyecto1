@@ -7,7 +7,6 @@
 #include <time.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <regex.h>
 
 #include "threadpool.h"
 
@@ -25,7 +24,7 @@ Output: a integer 1: Invalid.
 void* readLine(void* p_args)
 {
 	struct arg_structure *args = (struct arg_structure *) p_args;
-	match_regex(args->reg, args->line, args->expresionRegular);
+	match_regex(args.reg, args.line, args.expresionRegular);
     
 }
 
@@ -100,19 +99,21 @@ struct dirent* openDirectoryForL(char* directory, char* expresion){
 			    ssize_t read;                 
 			    struct flock lock;      //Bloqueador del archivo
 
-			    fd = open(args->filename, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);  
+			    fd = open(args.filename, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);  
 			    /* Inicializar la estructura del flock*/
 			    memset(&lock, 0, sizeof(lock));
 			    lock.l_type = F_WRLCK;
 			    
 			    /* Colocar la cerradura de escritura al archivo*/
-			    fcntl (fd, F_SETLKW, &lock);
+				fcntl (fd, F_SETLKW, &lock);
+				int jobNumber = 1;
+			    while ((read = getline(&line, &len, fp)) != -1) {
 
-			    while ((read = getline(&line, &len, fd)) != -1) {
-			    	args->line = line;
-			    	add_job_request(i, (void*) readLine, (void *)&args, &got_job_request, &request_mutex);
+			    	args.line = line;
+			    	add_job_request(jobNumber, (void*) readLine, (void *)&args, &got_job_request, &request_mutex);
 			        printf("Reading: %zu :\n", read);
 			        printf("%s", line);
+			        jobNumber++;
 			    }
 
 			    /*Soltar la cerradura*/
@@ -120,7 +121,6 @@ struct dirent* openDirectoryForL(char* directory, char* expresion){
 			    fcntl (fd, F_SETLKW, &lock);
 			    
 			    close(fd);
-				add_job_request(i, (void*) file_process, (void *)&args, &got_job_request, &request_mutex);
 				//CÓDIGO para llamar a abrir archivo
 			}
 
@@ -161,11 +161,6 @@ struct dirent* openDirectoryForL(char* directory, char* expresion){
 		return dp;
 }
 
-
-
-
-
-
 /*Open a directory method R
 ENTRY:  A directory
 Output: a DIR* Pointer
@@ -185,7 +180,35 @@ struct dirent* openDirectoryForR(char* directory, char* expresion){
 			if (dp->d_type == DT_REG){
 				printf ("File found --> %s\n", dp->d_name);
 				args.filename = directory;
-				add_job_request(i, (void*) file_process, (void *)&args, &got_job_request, &request_mutex);
+				args.expresionRegular = expresion;	
+				int fd;
+			    char * line = NULL;
+			    size_t len = 0;
+			    ssize_t read;                 
+			    struct flock lock;      //Bloqueador del archivo
+
+			    fd = open(args.filename, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);  
+			    /* Inicializar la estructura del flock*/
+			    memset(&lock, 0, sizeof(lock));
+			    lock.l_type = F_WRLCK;
+			    
+			    /* Colocar la cerradura de escritura al archivo*/
+				fcntl (fd, F_SETLKW, &lock);
+				int jobNumber = 1;
+			    while ((read = getline(&line, &len, fp)) != -1) {
+
+			    	args.line = line;
+			    	add_job_request(jobNumber, (void*) readLine, (void *)&args, &got_job_request, &request_mutex);
+			        printf("Reading: %zu :\n", read);
+			        printf("%s", line);
+			        jobNumber++;
+			    }
+
+			    /*Soltar la cerradura*/
+			    lock.l_type = F_UNLCK;
+			    fcntl (fd, F_SETLKW, &lock);
+			    
+			    close(fd);
 				//CÓDIGO para llamar a abrir archivo
 			}
 
@@ -230,14 +253,6 @@ struct dirent* openDirectoryForR(char* directory, char* expresion){
 	}
 		return dp;
 }
-
-
-
-
-
-
-
-
 //Main function
 int main(int argc, char const *argv[])
 {
@@ -276,14 +291,14 @@ int main(int argc, char const *argv[])
 		if (strcmp(typeMethod, "-l") == 0){
 
 			printf("-l: Method that search in a file until find a match with the regular expression \n\n" );
-			openDirectoryForL(directory, regularExpression);
+			openDirectoryForL(directory);
 
 		}
 		else{
 			if (strcmp(typeMethod, "-r") == 0){
 
 			printf("-r: Method that search in all the files and directories printing all the matches of the regular expression \n\n" );
-			openDirectoryForR(directory, regularExpression);
+			openDirectoryForR(directory);
 
 			}
 		}
