@@ -2,7 +2,7 @@
 
 #include <sys/types.h>
 #include <dirent.h>
-#include "stdio.h"
+#include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <fcntl.h>
@@ -11,7 +11,30 @@
 #include "threadpool.h"
 
 
+
+
+
+/*Match method
+ENTRY:  regex, text, regular expression.  
+Output: a integer 1: FOUND.
+				  2: NO FOUND.
+*/
+int match_regex (regex_t* r, const char* to_match, const char* er){
+  int res = regexec(r, to_match, 0, NULL, 0); 
+    if (!res){
+      printf ("Encontrada....'%s' in '%s'\n", er, to_match);
+      return 1;
+      /* code */
+    }
+    else{
+      printf ("No Encontrada....'%s' in '%s'\n", er, to_match);
+      return 0;
+      /* code */
+    }
+}
+
 struct arg_structure args;
+
 /*
 	Manejar Archivos.
 */		
@@ -27,6 +50,15 @@ void* readLine(void* p_args)
 	match_regex(args->reg, args->line, args->expresionRegular);
     
 }
+
+
+
+
+
+
+
+
+
 
 
 /*
@@ -49,25 +81,6 @@ static int compile_regex (regex_t* r, const char* regex_text){
         return 1;
     }
     return 0;
-}
-
-/*Match method
-ENTRY:  regex, text, regular expression.  
-Output: a integer 1: FOUND.
-				  2: NO FOUND.
-*/
-int match_regex (regex_t* r, const char* to_match, const char* er){
-  int res = regexec(r, to_match, 0, NULL, 0); 
-    if (!res){
-      printf ("Encontrada....'%s' in '%s'\n", er, to_match);
-      return 1;
-      /* code */
-    }
-    else{
-      printf ("No Encontrada....'%s' in '%s'\n", er, to_match);
-      return 0;
-      /* code */
-    }
 }
 
 
@@ -110,7 +123,7 @@ struct dirent* openDirectoryForL(char* directory, char* expresion){
 			    /* Colocar la cerradura de escritura al archivo*/
 				fcntl (fd, F_SETLKW, &lock);
 				int jobNumber = 1;
-			    while ((read = getline(&line, &len, dp)) != -1) {
+			    while ((read = getline(&line, &len, (int*)fd)) != -1) {
 
 			    	args.line = line;
 			    	add_job_request(jobNumber, (void*) readLine, (void *)&args, &got_job_request, &request_mutex);
@@ -198,7 +211,7 @@ struct dirent* openDirectoryForR(char* directory, char* expresion){
 			    /* Colocar la cerradura de escritura al archivo*/
 				fcntl (fd, F_SETLKW, &lock);
 				int jobNumber = 1;
-			    while ((read = getline(&line, &len, dp)) != -1) {
+			    while ((read = getline(&line, &len, fd)) != -1) {
 
 			    	args.line = line;
 			    	add_job_request(jobNumber, (void*) readLine, (void *)&args, &got_job_request, &request_mutex);
