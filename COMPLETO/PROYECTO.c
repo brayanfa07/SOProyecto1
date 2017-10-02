@@ -24,7 +24,7 @@ Output: a integer 1: Invalid.
 void* readLine(void* p_args)
 {
 	struct arg_structure *args = (struct arg_structure *) p_args;
-	match_regex(args.reg, args.line, args.expresionRegular);
+	match_regex(args->reg, args->line, args->expresionRegular);
     
 }
 
@@ -37,6 +37,9 @@ ENTRY:  regex, regular expression
 Output: a integer 1: Invalid.
 				  2: Correct.
 */
+
+#define MAX_ERROR_MSG 0x1000
+
 static int compile_regex (regex_t* r, const char* regex_text){
     int status = regcomp (r, regex_text, REG_EXTENDED);
     if (status != 0) {
@@ -53,7 +56,7 @@ ENTRY:  regex, text, regular expression.
 Output: a integer 1: FOUND.
 				  2: NO FOUND.
 */
-static int match_regex (regex_t* r, const char* to_match, const char* er){
+int match_regex (regex_t* r, const char* to_match, const char* er){
   int res = regexec(r, to_match, 0, NULL, 0); 
     if (!res){
       printf ("Encontrada....'%s' in '%s'\n", er, to_match);
@@ -107,7 +110,7 @@ struct dirent* openDirectoryForL(char* directory, char* expresion){
 			    /* Colocar la cerradura de escritura al archivo*/
 				fcntl (fd, F_SETLKW, &lock);
 				int jobNumber = 1;
-			    while ((read = getline(&line, &len, fp)) != -1) {
+			    while ((read = getline(&line, &len, dp)) != -1) {
 
 			    	args.line = line;
 			    	add_job_request(jobNumber, (void*) readLine, (void *)&args, &got_job_request, &request_mutex);
@@ -146,7 +149,7 @@ struct dirent* openDirectoryForL(char* directory, char* expresion){
 		                printf("New Route for new directory defined --> %s\n\n", newDirectory);
 
 		                printf("====================  Introducing in other folder ... \n");
-		                openDirectory(newDirectory);
+		                openDirectoryForL(newDirectory, expresion);
 					}
 				}
 			}
@@ -195,7 +198,7 @@ struct dirent* openDirectoryForR(char* directory, char* expresion){
 			    /* Colocar la cerradura de escritura al archivo*/
 				fcntl (fd, F_SETLKW, &lock);
 				int jobNumber = 1;
-			    while ((read = getline(&line, &len, fp)) != -1) {
+			    while ((read = getline(&line, &len, dp)) != -1) {
 
 			    	args.line = line;
 			    	add_job_request(jobNumber, (void*) readLine, (void *)&args, &got_job_request, &request_mutex);
@@ -234,7 +237,7 @@ struct dirent* openDirectoryForR(char* directory, char* expresion){
 		                printf("New Route for new directory defined --> %s\n\n", newDirectory);
 
 		                printf("====================  Introducing in other folder ... \n");
-		                openDirectory(newDirectory);
+		                openDirectoryForR(newDirectory, expresion);
 					}
 				}
 			}
@@ -253,6 +256,14 @@ struct dirent* openDirectoryForR(char* directory, char* expresion){
 	}
 		return dp;
 }
+
+
+
+
+
+
+
+
 //Main function
 int main(int argc, char const *argv[])
 {
